@@ -2,7 +2,6 @@
 
 A brand analytics dashboard that transforms shopper interaction data into actionable insights for fashion brands.
 
-![Dashboard Preview](https://figr.so)
 
 ## Quick Start
 
@@ -50,7 +49,7 @@ The app runs at `http://localhost:5173`
 
 ---
 
-## What I Built
+## What Was Built
 
 ### Pages
 
@@ -190,7 +189,7 @@ Instead of just showing data, the dashboard generates actionable insights:
 
 ## Time Spent
 
-5-6 hours total
+5-6 hours approx.
 
 ---
 
