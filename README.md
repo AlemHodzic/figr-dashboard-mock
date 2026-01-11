@@ -1,0 +1,204 @@
+# Figr Brand Performance Dashboard
+
+A brand analytics dashboard that transforms shopper interaction data into actionable insights for fashion brands.
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Run Locally
+
+**1. Start the Backend**
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+The API runs at `http://localhost:3001`
+
+**2. Start the Frontend**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The app runs at `http://localhost:5173`
+
+### Deploy
+
+**Backend → Railway**
+1. Connect your GitHub repo to Railway
+2. Set root directory: `backend`
+3. Build command: `npm run build`
+4. Start command: `npm start`
+5. Railway auto-provides the `PORT` env variable
+
+**Frontend → Vercel**
+1. Connect same GitHub repo to Vercel
+2. Set root directory: `frontend`
+3. Framework preset: Vite
+4. Add env variable: `VITE_API_URL` = your Railway backend URL
+
+---
+
+## What I Built
+
+### Pages
+
+**1. Overview**
+- KPI cards showing: Total Avatars, Try-ons, Completion Rate, Conversion Rate, SKU Coverage, Latency
+- Trend indicators comparing to previous period
+- Color-coded status (green/yellow/red) for quick health assessment
+- Conversion funnel visualization
+
+**2. Analytics**
+- Try-ons over time (line chart)
+- Category breakdown (pie chart: Tops, Bottoms, One-pieces)
+- Top products by try-ons (horizontal bar)
+- Height distribution (histogram)
+- Size recommendation distribution
+- Latency trends over time
+- Demographics breakdowns (age, gender, country)
+
+**3. Recommendations**
+- Data-driven actionable insights
+- Prioritized by severity (High/Medium/Low)
+- Each recommendation includes:
+  - Problem description
+  - Supporting metric with current value
+  - Specific action to take
+- Categories: Engagement, Catalog, Technical, Sizing
+
+### Features
+
+- **Date range filtering** - Filter all metrics by time period
+- **Loading states** - Skeleton loaders for each component
+- **Error handling** - Error states with retry buttons
+- **Empty states** - Friendly messaging when no data
+- **Responsive design** - Works on different screen sizes
+
+---
+
+## Technical Decisions
+
+### Why Express.js for Backend?
+
+The task prioritized "Technical implementation and orchestration of backend" as #1. A proper Express server demonstrates:
+- Clear separation of concerns (routes → controllers → services)
+- Middleware patterns (error handling, CORS)
+- API design skills
+- Real-world backend architecture
+
+### Why These Metrics?
+
+**Core metrics** (what brands track):
+- Avatar completion rate → Onboarding funnel health
+- Try-on conversion → Product engagement
+- SKU coverage → Catalog optimization opportunity
+
+**Advanced metrics** (decision drivers):
+- Category performance → Where to focus inventory
+- Size distribution → Sizing availability gaps
+- Drop-off funnel → Where users abandon
+
+### Recommendations Engine
+
+Instead of just showing data, the dashboard generates actionable insights:
+- Compares metrics against thresholds
+- Identifies underperforming areas
+- Suggests specific actions
+- Prioritizes by business impact
+
+### UI/UX Choices
+
+- **Clean, professional design** - Not flashy, but clear hierarchy
+- **Status indicators** - Color-coding helps non-technical users
+- **Plain language** - Tooltips and labels avoid jargon
+- **Progressive disclosure** - Overview first, details in Analytics
+
+---
+
+## What I'd Add Next
+
+**With more time:**
+
+1. **Real database** - PostgreSQL with Prisma ORM for proper data persistence
+2. **Authentication** - Brand-specific dashboards with login
+3. **Export functionality** - CSV/PDF reports for stakeholders
+4. **Custom date picker** - Calendar UI for precise date ranges
+5. **Comparison mode** - Compare two time periods side by side
+6. **Alerts/notifications** - Email when metrics cross thresholds
+7. **More visualizations** - Heatmaps, cohort analysis, retention curves
+8. **Mobile optimization** - Responsive sidebar, touch-friendly charts
+9. **Dark mode** - Theme toggle for user preference
+10. **Tests** - Unit tests for services, E2E tests for critical flows
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Backend | Express.js, TypeScript |
+| Frontend | React, TypeScript, Vite |
+| Styling | Tailwind CSS, shadcn-inspired components |
+| Charts | Recharts |
+| State | TanStack Query |
+| Deployment | Railway (backend), Vercel (frontend) |
+
+---
+
+## Project Structure
+
+```
+├── backend/
+│   ├── src/
+│   │   ├── controllers/    # Request handlers
+│   │   ├── services/       # Business logic
+│   │   ├── routes/         # API endpoints
+│   │   ├── data/           # Mock JSON data
+│   │   ├── middleware/     # Error handling
+│   │   ├── types/          # TypeScript types
+│   │   └── utils/          # Helpers
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/     # UI components
+│   │   ├── pages/          # Route pages
+│   │   ├── hooks/          # Data fetching hooks
+│   │   ├── lib/            # Utils, API client
+│   │   └── types/          # TypeScript types
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## Time Spent
+
+5-6 hours total
+
+---
+
+## API Reference
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/metrics/summary` | Top-level KPIs |
+| `GET /api/metrics/avatars` | Avatar creation stats |
+| `GET /api/metrics/tryons` | Try-on metrics by category |
+| `GET /api/metrics/products` | Product performance |
+| `GET /api/metrics/shoppers` | Demographics, distributions |
+| `GET /api/metrics/performance` | Latency, error rates |
+| `GET /api/recommendations` | Actionable insights |
+
+All endpoints support `?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` query params.
