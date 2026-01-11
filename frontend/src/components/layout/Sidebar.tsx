@@ -16,13 +16,22 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-900 text-white shadow-lg"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+      {/* Mobile header bar */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-slate-900 text-white flex items-center px-4 z-40 shadow-md">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="p-2 -ml-2 rounded-lg hover:bg-slate-800 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="flex items-center gap-2 ml-2">
+          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-sm">
+            F
+          </div>
+          <span className="font-semibold text-sm">Figr Dashboard</span>
+        </div>
+      </header>
 
       {/* Mobile overlay */}
       {mobileOpen && (
@@ -51,6 +60,7 @@ export function Sidebar() {
           <button
             onClick={() => setMobileOpen(false)}
             className="lg:hidden p-1 hover:bg-slate-800 rounded"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>

@@ -21,9 +21,12 @@ export function FunnelChart({ data, loading }: FunnelChartProps) {
           <Skeleton className="h-5 w-32" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Skeleton key={i} className="h-14" style={{ width: `${100 - i * 15}%` }} />
+          <div className="space-y-4">
+            {[100, 80, 60, 45, 25].map((width, i) => (
+              <div key={i} className="space-y-1">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-8" style={{ width: `${width}%` }} />
+              </div>
             ))}
           </div>
         </CardContent>
@@ -31,27 +34,27 @@ export function FunnelChart({ data, loading }: FunnelChartProps) {
     );
   }
 
-  const colors = [
-    'bg-violet-600',
-    'bg-violet-500',
-    'bg-purple-500',
-    'bg-purple-400',
-    'bg-fuchsia-400',
-  ];
+  // Create a proper funnel shape: first bar is 100%, each step reduces proportionally
+  const getBarWidth = (index: number, totalSteps: number) => {
+    const minWidth = 20;
+    const stepReduction = (100 - minWidth) / (totalSteps - 1);
+    return 100 - (index * stepReduction);
+  };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Conversion Funnel</CardTitle>
-        <p className="text-sm text-muted-foreground">User journey from onboarding to try-on</p>
+        <p className="text-sm text-muted-foreground">User journey from onboarding to purchase</p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
+        <div className="space-y-1">
           {data.map((stage, index) => {
             const dropoff = index > 0 ? data[index - 1].count - stage.count : 0;
             const dropoffPercent = index > 0 && data[index - 1].count > 0 
               ? Math.round((dropoff / data[index - 1].count) * 100) 
               : 0;
+            const barWidth = getBarWidth(index, data.length);
             
             return (
               <div key={stage.stage}>
@@ -61,20 +64,25 @@ export function FunnelChart({ data, loading }: FunnelChartProps) {
                     <span>{dropoff} dropped ({dropoffPercent}% drop-off)</span>
                   </div>
                 )}
-                <div className="relative flex items-center">
-                  <div
-                    className={`${colors[index % colors.length]} h-14 rounded-lg flex items-center px-4 transition-all duration-300 shadow-sm`}
-                    style={{ width: `${Math.max(stage.percentage, 25)}%`, minWidth: '180px' }}
-                  >
-                    <span className="text-white font-medium text-sm">
+                <div className="space-y-1">
+                  {/* Stage label and stats row */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">
                       {stage.stage}
                     </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-foreground">{stage.count}</span>
+                      <span className="text-xs text-muted-foreground px-1.5 py-0.5 bg-muted rounded">
+                        {stage.percentage}%
+                      </span>
+                    </div>
                   </div>
-                  <div className="ml-4 flex items-center gap-3">
-                    <span className="text-xl font-bold text-foreground">{stage.count}</span>
-                    <span className="text-sm text-muted-foreground px-2 py-0.5 bg-muted rounded">
-                      {stage.percentage}%
-                    </span>
+                  {/* Progress bar */}
+                  <div className="h-8 bg-muted/30 rounded-lg overflow-hidden">
+                    <div
+                      className="h-full bg-violet-600 rounded-lg transition-all duration-300"
+                      style={{ width: `${barWidth}%` }}
+                    />
                   </div>
                 </div>
               </div>
