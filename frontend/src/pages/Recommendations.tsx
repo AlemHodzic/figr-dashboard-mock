@@ -129,22 +129,22 @@ export function Recommendations() {
       />
       
       <div className="mb-6">
-        <Card className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200">
+        <Card className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950 border-violet-200 dark:border-violet-800">
           <div className="flex items-center gap-4">
             <div className="flex -space-x-1">
               {highPriority.length > 0 && (
-                <div className="w-8 h-8 rounded-full bg-red-100 border-2 border-white flex items-center justify-center">
-                  <span className="text-xs font-bold text-red-600">{highPriority.length}</span>
+                <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 border-2 border-white dark:border-slate-800 flex items-center justify-center">
+                  <span className="text-xs font-bold text-red-600 dark:text-red-400">{highPriority.length}</span>
                 </div>
               )}
               {mediumPriority.length > 0 && (
-                <div className="w-8 h-8 rounded-full bg-amber-100 border-2 border-white flex items-center justify-center">
-                  <span className="text-xs font-bold text-amber-600">{mediumPriority.length}</span>
+                <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900 border-2 border-white dark:border-slate-800 flex items-center justify-center">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400">{mediumPriority.length}</span>
                 </div>
               )}
               {lowPriority.length > 0 && (
-                <div className="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center">
-                  <span className="text-xs font-bold text-slate-600">{lowPriority.length}</span>
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-white dark:border-slate-800 flex items-center justify-center">
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{lowPriority.length}</span>
                 </div>
               )}
             </div>

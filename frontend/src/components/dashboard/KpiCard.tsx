@@ -52,15 +52,15 @@ export function KpiCard({
   };
 
   const statusBg = {
-    good: 'bg-emerald-50 border-emerald-200',
-    warning: 'bg-amber-50 border-amber-200',
-    bad: 'bg-red-50 border-red-200',
+    good: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900',
+    warning: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900',
+    bad: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900',
     neutral: ''
   };
 
   const trendColors = {
-    up: 'text-emerald-600 bg-emerald-50',
-    down: 'text-red-600 bg-red-50',
+    up: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50',
+    down: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50',
     flat: 'text-muted-foreground bg-muted'
   };
 

@@ -2,6 +2,8 @@
 
 A brand analytics dashboard that transforms shopper interaction data into actionable insights for fashion brands.
 
+![Dashboard Preview](https://figr.so)
+
 ## Quick Start
 
 ### Prerequisites
@@ -38,7 +40,7 @@ The app runs at `http://localhost:5173`
 2. Set root directory: `backend`
 3. Build command: `npm run build`
 4. Start command: `npm start`
-5. Railway auto-provides the `PORT` env variable
+5. Add env variable: `SIMULATE_DELAY=false` (disables mock delay in production)
 
 **Frontend → Vercel**
 1. Connect same GitHub repo to Vercel
@@ -56,15 +58,16 @@ The app runs at `http://localhost:5173`
 - KPI cards showing: Total Avatars, Try-ons, Completion Rate, Conversion Rate, SKU Coverage, Latency
 - Trend indicators comparing to previous period
 - Color-coded status (green/yellow/red) for quick health assessment
-- Conversion funnel visualization
+- Conversion funnel visualization with drop-off indicators
+- Helpful tooltips explaining each metric
 
 **2. Analytics**
 - Try-ons over time (line chart)
-- Category breakdown (pie chart: Tops, Bottoms, One-pieces)
+- Category breakdown (donut chart: Tops, Bottoms, One-pieces)
 - Top products by try-ons (horizontal bar)
 - Height distribution (histogram)
 - Size recommendation distribution
-- Latency trends over time
+- Latency trends over time with legend
 - Demographics breakdowns (age, gender, country)
 
 **3. Recommendations**
@@ -78,11 +81,14 @@ The app runs at `http://localhost:5173`
 
 ### Features
 
-- **Date range filtering** - Filter all metrics by time period
+- **Date range filtering** - Presets (7d, 14d, 30d, All) + custom date picker
+- **CSV Export** - Download metrics report with one click
+- **Dark/Light mode** - Theme toggle in sidebar
+- **Mobile responsive** - Collapsible sidebar, adapted layouts
 - **Loading states** - Skeleton loaders for each component
 - **Error handling** - Error states with retry buttons
 - **Empty states** - Friendly messaging when no data
-- **Responsive design** - Works on different screen sizes
+- **Metric tooltips** - Hover to understand what each KPI means
 
 ---
 
@@ -115,6 +121,7 @@ Instead of just showing data, the dashboard generates actionable insights:
 - Identifies underperforming areas
 - Suggests specific actions
 - Prioritizes by business impact
+- Context-aware (different time periods show different issues)
 
 ### UI/UX Choices
 
@@ -122,6 +129,7 @@ Instead of just showing data, the dashboard generates actionable insights:
 - **Status indicators** - Color-coding helps non-technical users
 - **Plain language** - Tooltips and labels avoid jargon
 - **Progressive disclosure** - Overview first, details in Analytics
+- **Dark mode support** - Reduces eye strain, modern preference
 
 ---
 
@@ -131,14 +139,11 @@ Instead of just showing data, the dashboard generates actionable insights:
 
 1. **Real database** - PostgreSQL with Prisma ORM for proper data persistence
 2. **Authentication** - Brand-specific dashboards with login
-3. **Export functionality** - CSV/PDF reports for stakeholders
-4. **Custom date picker** - Calendar UI for precise date ranges
-5. **Comparison mode** - Compare two time periods side by side
-6. **Alerts/notifications** - Email when metrics cross thresholds
-7. **More visualizations** - Heatmaps, cohort analysis, retention curves
-8. **Mobile optimization** - Responsive sidebar, touch-friendly charts
-9. **Dark mode** - Theme toggle for user preference
-10. **Tests** - Unit tests for services, E2E tests for critical flows
+3. **Comparison mode** - Compare two time periods side by side
+4. **Alerts/notifications** - Email when metrics cross thresholds
+5. **More visualizations** - Heatmaps, cohort analysis, retention curves
+6. **PDF Export** - Formatted reports for stakeholders
+7. **Tests** - Unit tests for services, E2E tests for critical flows
 
 ---
 
@@ -166,15 +171,15 @@ Instead of just showing data, the dashboard generates actionable insights:
 │   │   ├── data/           # Mock JSON data
 │   │   ├── middleware/     # Error handling
 │   │   ├── types/          # TypeScript types
-│   │   └── utils/          # Helpers
+│   │   └── utils/          # Helpers (delay, date filters)
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── components/     # UI components
 │   │   ├── pages/          # Route pages
-│   │   ├── hooks/          # Data fetching hooks
-│   │   ├── lib/            # Utils, API client
+│   │   ├── hooks/          # Data fetching + theme hooks
+│   │   ├── lib/            # Utils, API client, export
 │   │   └── types/          # TypeScript types
 │   └── package.json
 │
@@ -202,3 +207,19 @@ Instead of just showing data, the dashboard generates actionable insights:
 | `GET /api/recommendations` | Actionable insights |
 
 All endpoints support `?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` query params.
+
+---
+
+## Environment Variables
+
+### Backend
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | 3001 | Server port |
+| `SIMULATE_DELAY` | true | Enable fake API delay for demo |
+| `DELAY_MS` | 1500 | Delay duration in ms |
+
+### Frontend
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_API_URL` | Yes (prod) | Backend API URL |

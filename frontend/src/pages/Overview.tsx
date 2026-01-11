@@ -4,8 +4,9 @@ import { Header } from '../components/layout/Header';
 import { KpiCard } from '../components/dashboard/KpiCard';
 import { ErrorState } from '../components/dashboard/ErrorState';
 import { FunnelChart } from '../components/charts/FunnelChart';
-import { useSummary, useShopperMetrics, useTryonMetrics } from '../hooks/useMetrics';
+import { useSummary, useShopperMetrics, useTryonMetrics, useProductMetrics } from '../hooks/useMetrics';
 import { formatPercent, formatLatency } from '../lib/utils';
+import { exportMetricsReport } from '../lib/export';
 import type { DateRange } from '../types';
 
 export function Overview() {
@@ -14,12 +15,22 @@ export function Overview() {
   const { data: summary, isLoading: summaryLoading, error: summaryError, refetch: refetchSummary } = useSummary(dateRange);
   const { data: shoppers, isLoading: shoppersLoading } = useShopperMetrics(dateRange);
   const { data: tryons } = useTryonMetrics(dateRange);
+  const { data: products } = useProductMetrics(dateRange);
 
   const funnel = [
     { stage: 'Started Onboarding', count: shoppers?.total || 0, percentage: 100 },
     { stage: 'Avatar Created', count: summary?.totalAvatars || 0, percentage: summary?.avatarCompletionRate || 0 },
     { stage: 'Try-on Completed', count: summary?.totalTryons || 0, percentage: summary?.tryonConversionRate || 0 },
   ];
+
+  const handleExport = () => {
+    if (!summary) return;
+    exportMetricsReport({
+      summary: summary as unknown as Record<string, unknown>,
+      shoppers: shoppers as unknown as { heightDistribution?: unknown[]; sizeRecommendations?: unknown[] },
+      products: products as unknown as { topProducts?: unknown[] },
+    });
+  };
 
   if (summaryError) {
     return (
@@ -45,9 +56,10 @@ export function Overview() {
         subtitle="Key performance metrics at a glance"
         dateRange={dateRange}
         onDateRangeChange={setDateRange}
+        onExport={handleExport}
       />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
         <KpiCard
           title="Total Avatars"
           value={summary?.totalAvatars || 0}
@@ -125,27 +137,27 @@ export function Overview() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <FunnelChart data={funnel} loading={summaryLoading || shoppersLoading} />
         
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Quick Stats</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-white border">
+          <h3 className="text-lg font-semibold text-foreground">Quick Stats</h3>
+          <div className="grid grid-cols-2 gap-3 lg:gap-4">
+            <div className="p-4 rounded-lg bg-card border">
               <p className="text-sm text-muted-foreground">Avg Try-ons / User</p>
-              <p className="text-2xl font-bold">{tryons?.avgPerUser || 0}</p>
+              <p className="text-2xl font-bold text-foreground">{tryons?.avgPerUser || 0}</p>
             </div>
-            <div className="p-4 rounded-lg bg-white border">
+            <div className="p-4 rounded-lg bg-card border">
               <p className="text-sm text-muted-foreground">Error Rate</p>
-              <p className="text-2xl font-bold">{summary?.errorRate || 0}%</p>
+              <p className="text-2xl font-bold text-foreground">{summary?.errorRate || 0}%</p>
             </div>
-            <div className="p-4 rounded-lg bg-white border">
+            <div className="p-4 rounded-lg bg-card border">
               <p className="text-sm text-muted-foreground">Total Shoppers</p>
-              <p className="text-2xl font-bold">{shoppers?.total || 0}</p>
+              <p className="text-2xl font-bold text-foreground">{shoppers?.total || 0}</p>
             </div>
-            <div className="p-4 rounded-lg bg-white border">
+            <div className="p-4 rounded-lg bg-card border">
               <p className="text-sm text-muted-foreground">Completed Onboarding</p>
-              <p className="text-2xl font-bold">{shoppers?.completedOnboarding || 0}</p>
+              <p className="text-2xl font-bold text-foreground">{shoppers?.completedOnboarding || 0}</p>
             </div>
           </div>
         </div>

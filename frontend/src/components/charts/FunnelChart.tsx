@@ -71,7 +71,7 @@ export function FunnelChart({ data, loading }: FunnelChartProps) {
                     </span>
                   </div>
                   <div className="ml-4 flex items-center gap-3">
-                    <span className="text-xl font-bold">{stage.count}</span>
+                    <span className="text-xl font-bold text-foreground">{stage.count}</span>
                     <span className="text-sm text-muted-foreground px-2 py-0.5 bg-muted rounded">
                       {stage.percentage}%
                     </span>

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Calendar, X } from 'lucide-react';
+import { Calendar, X, Download } from 'lucide-react';
 import type { DateRange } from '../../types';
 
 interface HeaderProps {
@@ -7,19 +7,20 @@ interface HeaderProps {
   subtitle?: string;
   dateRange: DateRange;
   onDateRangeChange: (range: DateRange) => void;
+  onExport?: () => void;
 }
 
-export function Header({ title, subtitle, dateRange, onDateRangeChange }: HeaderProps) {
+export function Header({ title, subtitle, dateRange, onDateRangeChange, onExport }: HeaderProps) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [customStart, setCustomStart] = useState(dateRange.startDate || '');
   const [customEnd, setCustomEnd] = useState(dateRange.endDate || '');
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const presets = [
-    { label: 'Last 7 days', days: 7 },
-    { label: 'Last 14 days', days: 14 },
-    { label: 'Last 30 days', days: 30 },
-    { label: 'All time', days: 0 },
+    { label: '7d', fullLabel: 'Last 7 days', days: 7 },
+    { label: '14d', fullLabel: 'Last 14 days', days: 14 },
+    { label: '30d', fullLabel: 'Last 30 days', days: 30 },
+    { label: 'All', fullLabel: 'All time', days: 0 },
   ];
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
     const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     
     const preset = presets.find(p => p.days === days);
-    return preset?.label || 'Custom';
+    return preset?.fullLabel || 'Custom';
   };
 
   const formatDateDisplay = () => {
@@ -89,32 +90,33 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
   const isCustom = getActivePreset() === 'Custom';
 
   return (
-    <header className="mb-8">
-      <div className="flex items-start justify-between">
+    <header className="mb-6 lg:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
+          <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-foreground">{title}</h1>
           {subtitle && (
-            <p className="mt-1 text-muted-foreground">{subtitle}</p>
+            <p className="mt-1 text-sm lg:text-base text-muted-foreground">{subtitle}</p>
           )}
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex items-center gap-1 p-1 bg-muted rounded-lg">
             {presets.map((preset) => (
               <button
-                key={preset.label}
+                key={preset.fullLabel}
                 onClick={() => handlePresetClick(preset.days)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                  getActivePreset() === preset.label
-                    ? 'bg-white text-foreground shadow-sm'
+                className={`px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-md transition-colors ${
+                  getActivePreset() === preset.fullLabel
+                    ? 'bg-card text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {preset.label}
+                <span className="sm:hidden">{preset.label}</span>
+                <span className="hidden sm:inline">{preset.fullLabel}</span>
               </button>
             ))}
             {isCustom && (
-              <span className="px-3 py-1.5 text-sm font-medium rounded-md bg-white text-foreground shadow-sm">
+              <span className="px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-md bg-card text-foreground shadow-sm">
                 Custom
               </span>
             )}
@@ -128,15 +130,16 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
                   ? 'bg-primary text-white'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
+              title="Custom date range"
             >
-              <Calendar className="h-5 w-5" />
+              <Calendar className="h-4 w-4 lg:h-5 lg:w-5" />
               {isCustom && formatDateDisplay() && (
-                <span className="text-sm font-medium">{formatDateDisplay()}</span>
+                <span className="hidden lg:inline text-sm font-medium">{formatDateDisplay()}</span>
               )}
             </button>
 
             {showDatePicker && (
-              <div className="absolute right-0 top-full mt-2 p-4 bg-white rounded-lg shadow-lg border z-50 w-80">
+              <div className="absolute right-0 top-full mt-2 p-4 bg-card rounded-lg shadow-lg border z-50 w-72 lg:w-80">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-foreground">Custom Date Range</h3>
                   <button 
@@ -157,7 +160,7 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
                       value={customStart}
                       onChange={(e) => setCustomStart(e.target.value)}
                       max={customEnd || undefined}
-                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full px-3 py-2 border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     />
                   </div>
                   
@@ -171,7 +174,7 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
                       onChange={(e) => setCustomEnd(e.target.value)}
                       min={customStart || undefined}
                       max={new Date().toISOString().split('T')[0]}
-                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full px-3 py-2 border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     />
                   </div>
                 </div>
@@ -194,6 +197,16 @@ export function Header({ title, subtitle, dateRange, onDateRangeChange }: Header
               </div>
             )}
           </div>
+
+          {onExport && (
+            <button
+              onClick={onExport}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              title="Export to CSV"
+            >
+              <Download className="h-4 w-4 lg:h-5 lg:w-5" />
+            </button>
+          )}
         </div>
       </div>
     </header>
