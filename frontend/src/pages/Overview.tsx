@@ -56,6 +56,7 @@ export function Overview() {
           trendLabel="vs last period"
           icon={<Users className="h-5 w-5" />}
           loading={summaryLoading}
+          tooltip="Number of virtual avatars created from user photos"
         />
         
         <KpiCard
@@ -66,6 +67,7 @@ export function Overview() {
           trendLabel="vs last period"
           icon={<Shirt className="h-5 w-5" />}
           loading={summaryLoading}
+          tooltip="Times users virtually tried on products"
         />
         
         <KpiCard
@@ -80,6 +82,7 @@ export function Overview() {
             (summary?.avatarCompletionRate || 0) >= 70 ? 'good' :
             (summary?.avatarCompletionRate || 0) >= 50 ? 'warning' : 'bad'
           }
+          tooltip="Percentage of users who completed avatar creation"
         />
         
         <KpiCard
@@ -92,6 +95,7 @@ export function Overview() {
             (summary?.tryonConversionRate || 0) >= 80 ? 'good' :
             (summary?.tryonConversionRate || 0) >= 60 ? 'warning' : 'bad'
           }
+          tooltip="Users with avatars who tried at least one product"
         />
         
         <KpiCard
@@ -104,6 +108,7 @@ export function Overview() {
             (summary?.skuCoverage || 0) >= 85 ? 'good' :
             (summary?.skuCoverage || 0) >= 70 ? 'warning' : 'bad'
           }
+          tooltip="Percentage of catalog enabled for virtual try-on"
         />
         
         <KpiCard
@@ -116,6 +121,7 @@ export function Overview() {
             (summary?.avgLatencyMs || 0) <= 2000 ? 'good' :
             (summary?.avgLatencyMs || 0) <= 3000 ? 'warning' : 'bad'
           }
+          tooltip="Average time to generate a try-on image"
         />
       </div>
 

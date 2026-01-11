@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, PieChart, Pie, Cell
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { Header } from '../components/layout/Header';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
@@ -52,6 +52,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Try-ons Over Time</CardTitle>
+            <p className="text-sm text-muted-foreground">Daily virtual try-on activity</p>
           </CardHeader>
           <CardContent>
             {tryonsLoading ? (
@@ -86,6 +87,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Category Breakdown</CardTitle>
+            <p className="text-sm text-muted-foreground">Try-ons by product type</p>
           </CardHeader>
           <CardContent>
             {tryonsLoading ? (
@@ -99,15 +101,23 @@ export function Analytics() {
                     nameKey="category"
                     cx="50%"
                     cy="50%"
-                    outerRadius={90}
-                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                    labelLine={false}
+                    innerRadius={50}
+                    outerRadius={85}
+                    paddingAngle={2}
                   >
                     {(tryons?.byCategory || []).map((_, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    formatter={(value, name) => [value, name]}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                  />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={36}
+                    formatter={(value) => <span className="text-sm">{value}</span>}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -119,6 +129,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Top Products</CardTitle>
+            <p className="text-sm text-muted-foreground">Most tried-on items</p>
           </CardHeader>
           <CardContent>
             {productsLoading ? (
@@ -149,6 +160,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Height Distribution</CardTitle>
+            <p className="text-sm text-muted-foreground">Shopper body measurements</p>
           </CardHeader>
           <CardContent>
             {shoppersLoading ? (
@@ -172,6 +184,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Size Recommendations</CardTitle>
+            <p className="text-sm text-muted-foreground">Suggested sizes for shoppers</p>
           </CardHeader>
           <CardContent>
             {shoppersLoading ? (
@@ -193,6 +206,7 @@ export function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Latency Trends</CardTitle>
+            <p className="text-sm text-muted-foreground">Generation time performance</p>
           </CardHeader>
           <CardContent>
             {performanceLoading ? (
@@ -212,6 +226,7 @@ export function Analytics() {
                     formatter={(value) => [`${(Number(value)/1000).toFixed(2)}s`]}
                     contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                   />
+                  <Legend verticalAlign="top" height={36} />
                   <Line type="monotone" dataKey="avatar" stroke="#8b5cf6" strokeWidth={2} name="Avatar" dot={false} />
                   <Line type="monotone" dataKey="tryon" stroke="#a78bfa" strokeWidth={2} name="Try-on" dot={false} />
                 </LineChart>
