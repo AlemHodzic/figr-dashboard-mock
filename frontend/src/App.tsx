@@ -4,6 +4,7 @@ import { Layout } from './components/layout/Layout';
 import { Overview } from './pages/Overview';
 import { Analytics } from './pages/Analytics';
 import { Recommendations } from './pages/Recommendations';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,17 +17,19 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Overview />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="recommendations" element={<Recommendations />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Overview />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="recommendations" element={<Recommendations />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

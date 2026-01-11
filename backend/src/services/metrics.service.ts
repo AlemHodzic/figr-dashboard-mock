@@ -1,4 +1,4 @@
-import { DateRange, SummaryMetrics, AvatarMetrics, TryonMetrics, ProductMetrics, ShopperMetrics, PerformanceMetrics, DropoffFunnel } from '../types';
+import { DateRange, SummaryMetrics, AvatarMetrics, TryonMetrics, ProductMetrics, ShopperMetrics, PerformanceMetrics, DropoffFunnel, Shopper, Avatar, TryOn, Product, Event, SizeRecommendation } from '../types';
 import { filterByDateRange, groupByDate, getPreviousPeriodRange, calculateTrend } from '../utils/dateFilters';
 
 import shoppersData from '../data/shoppers.json';
@@ -8,12 +8,13 @@ import productsData from '../data/products.json';
 import eventsData from '../data/events.json';
 import sizeRecsData from '../data/sizeRecommendations.json';
 
-const shoppers = shoppersData as any[];
-const avatars = avatarsData as any[];
-const tryons = tryonsData as any[];
-const products = productsData as any[];
-const events = eventsData as any[];
-const sizeRecs = sizeRecsData as any[];
+// Type assertions needed because JSON imports don't preserve string literal types
+const shoppers = shoppersData as Shopper[];
+const avatars = avatarsData as Avatar[];
+const tryons = tryonsData as TryOn[];
+const products = productsData as Product[];
+const events = eventsData as Event[];
+const sizeRecs = sizeRecsData as SizeRecommendation[];
 
 export function getSummaryMetrics(dateRange: DateRange): SummaryMetrics {
   const filteredAvatars = filterByDateRange(avatars, dateRange);

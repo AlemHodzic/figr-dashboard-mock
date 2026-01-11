@@ -1,6 +1,14 @@
-import type { TooltipProps } from 'recharts';
+interface PayloadEntry {
+  color?: string;
+  name?: string;
+  dataKey?: string | number;
+  value?: number | string;
+}
 
-interface CustomTooltipProps extends TooltipProps<number, string> {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: PayloadEntry[];
+  label?: string;
   labelFormatter?: (label: string) => string;
   valueFormatter?: (value: number) => string;
   valueSuffix?: string;

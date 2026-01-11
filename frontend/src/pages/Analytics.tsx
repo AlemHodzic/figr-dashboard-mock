@@ -3,6 +3,7 @@ import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
+import { Inbox } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
@@ -24,6 +25,18 @@ const useChartTheme = () => ({
   axisLine: 'rgba(148, 163, 184, 0.3)',
   tick: { fontSize: 12 },
 });
+
+// Empty state component for charts
+function ChartEmptyState({ message = 'No data available' }: { message?: string }) {
+  return (
+    <div className="h-64 flex flex-col items-center justify-center text-center">
+      <div className="p-3 rounded-full bg-muted mb-3">
+        <Inbox className="h-5 w-5 text-muted-foreground" />
+      </div>
+      <p className="text-sm text-muted-foreground">{message}</p>
+    </div>
+  );
+}
 
 export function Analytics() {
   const [dateRange, setDateRange] = useState<DateRange>({});
@@ -66,6 +79,8 @@ export function Analytics() {
           <CardContent>
             {tryonsLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !tryons?.timeline?.length ? (
+              <ChartEmptyState message="No try-on data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={tryons?.timeline || []}>
@@ -109,6 +124,8 @@ export function Analytics() {
           <CardContent>
             {tryonsLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !tryons?.byCategory?.some(c => c.count > 0) ? (
+              <ChartEmptyState message="No category data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
@@ -148,6 +165,8 @@ export function Analytics() {
           <CardContent>
             {productsLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !products?.topProducts?.length ? (
+              <ChartEmptyState message="No product data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart 
@@ -186,6 +205,8 @@ export function Analytics() {
           <CardContent>
             {shoppersLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !shoppers?.heightDistribution?.some(h => h.count > 0) ? (
+              <ChartEmptyState message="No shopper data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={shoppers?.heightDistribution || []}>
@@ -219,6 +240,8 @@ export function Analytics() {
           <CardContent>
             {shoppersLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !shoppers?.sizeRecommendations?.length ? (
+              <ChartEmptyState message="No size data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={shoppers?.sizeRecommendations || []}>
@@ -250,6 +273,8 @@ export function Analytics() {
           <CardContent>
             {performanceLoading ? (
               <Skeleton className="h-64 w-full" />
+            ) : !performance?.latencyTimeline?.length ? (
+              <ChartEmptyState message="No performance data for this period" />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={performance?.latencyTimeline || []}>

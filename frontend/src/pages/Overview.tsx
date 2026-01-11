@@ -15,7 +15,7 @@ export function Overview() {
   const [showComparison, setShowComparison] = useState(false);
   
   const { data: summary, isLoading: summaryLoading, error: summaryError, refetch: refetchSummary } = useSummary(dateRange);
-  const { data: shoppers, isLoading: shoppersLoading } = useShopperMetrics(dateRange);
+  const { data: shoppers } = useShopperMetrics(dateRange);
   const { data: tryons } = useTryonMetrics(dateRange);
   const { data: products } = useProductMetrics(dateRange);
   const { data: funnel, isLoading: funnelLoading } = useDropoffFunnel(dateRange);

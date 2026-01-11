@@ -94,15 +94,27 @@ The app runs at `http://localhost:5173`
 
 ### Testing
 
-The backend includes comprehensive unit tests covering:
+**Backend Tests** - Comprehensive unit tests covering:
 - Date filtering and period calculations
 - All metrics service functions
 - Recommendations engine logic
+- API validation middleware
 
 ```bash
 cd backend
 npm test           # Run all tests
 npm test:coverage  # Run with coverage report
+```
+
+**Frontend Tests** - Component and utility tests:
+- UI components (KpiCard, Badge, EmptyState, ErrorState)
+- Utility functions (formatNumber, formatPercent, formatLatency)
+
+```bash
+cd frontend
+npm test           # Run in watch mode
+npm run test:run   # Run once
+npm run test:coverage  # Run with coverage
 ```
 
 ---
@@ -145,6 +157,14 @@ Instead of just showing data, the dashboard generates actionable insights:
 - **Plain language** - Tooltips and labels avoid jargon
 - **Progressive disclosure** - Overview first, details in Analytics
 - **Dark mode support** - Reduces eye strain, modern preference
+
+### Error Handling & Robustness
+
+- **Error Boundary** - Global React error boundary catches unexpected crashes
+- **API Validation** - Date range inputs are validated (format, range logic, future dates)
+- **Consistent Empty States** - All charts show friendly empty states when no data
+- **Retry Functionality** - Error states include retry buttons
+- **Type Safety** - Full TypeScript coverage in both frontend and backend
 
 ---
 
