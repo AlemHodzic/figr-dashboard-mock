@@ -166,6 +166,14 @@ Instead of just showing data, the dashboard generates actionable insights:
 - **Retry Functionality** - Error states include retry buttons
 - **Type Safety** - Full TypeScript coverage in both frontend and backend
 
+### Security
+
+- **Helmet.js** - Security headers (X-Content-Type-Options, X-Frame-Options, etc.)
+- **CORS Configuration** - Restricted to allowed origins (localhost dev + production domains)
+- **Rate Limiting** - 100 requests per 15 minutes per IP to prevent abuse
+- **Sanitized Errors** - Validation errors don't echo back user input (prevents info disclosure)
+- **Generic Error Messages** - Internal errors return generic messages, not stack traces
+
 ---
 
 ## What I'd Add Next
@@ -187,6 +195,7 @@ Instead of just showing data, the dashboard generates actionable insights:
 | Layer | Technology |
 |-------|------------|
 | Backend | Express.js, TypeScript |
+| Security | Helmet, CORS, express-rate-limit |
 | Frontend | React, TypeScript, Vite |
 | Styling | Tailwind CSS, shadcn-inspired components |
 | Charts | Recharts |
@@ -205,7 +214,7 @@ Instead of just showing data, the dashboard generates actionable insights:
 │   │   ├── services/       # Business logic
 │   │   ├── routes/         # API endpoints
 │   │   ├── data/           # Mock JSON data
-│   │   ├── middleware/     # Error handling
+│   │   ├── middleware/     # Error handling, validation, security
 │   │   ├── types/          # TypeScript types
 │   │   └── utils/          # Helpers (delay, date filters, trends)
 │   ├── jest.config.js      # Test configuration

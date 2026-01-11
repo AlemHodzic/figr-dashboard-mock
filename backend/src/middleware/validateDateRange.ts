@@ -5,6 +5,8 @@ import { Request, Response, NextFunction } from 'express';
  * - Ensures dates are in YYYY-MM-DD format
  * - Ensures startDate is before endDate
  * - Ensures dates are not in the future
+ * 
+ * Note: Error messages don't echo back user input to prevent information disclosure
  */
 export function validateDateRange(req: Request, res: Response, next: NextFunction) {
   const { startDate, endDate } = req.query;
@@ -23,8 +25,7 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
     if (!dateRegex.test(startDate)) {
       return res.status(400).json({
         error: 'Invalid startDate format',
-        message: 'startDate must be in YYYY-MM-DD format',
-        received: startDate
+        message: 'startDate must be in YYYY-MM-DD format'
       });
     }
     
@@ -32,16 +33,14 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
     if (isNaN(parsedStart.getTime())) {
       return res.status(400).json({
         error: 'Invalid startDate',
-        message: 'startDate is not a valid date',
-        received: startDate
+        message: 'startDate is not a valid date'
       });
     }
 
     if (parsedStart > today) {
       return res.status(400).json({
         error: 'Invalid startDate',
-        message: 'startDate cannot be in the future',
-        received: startDate
+        message: 'startDate cannot be in the future'
       });
     }
   }
@@ -51,8 +50,7 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
     if (!dateRegex.test(endDate)) {
       return res.status(400).json({
         error: 'Invalid endDate format',
-        message: 'endDate must be in YYYY-MM-DD format',
-        received: endDate
+        message: 'endDate must be in YYYY-MM-DD format'
       });
     }
     
@@ -60,16 +58,14 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
     if (isNaN(parsedEnd.getTime())) {
       return res.status(400).json({
         error: 'Invalid endDate',
-        message: 'endDate is not a valid date',
-        received: endDate
+        message: 'endDate is not a valid date'
       });
     }
 
     if (parsedEnd > today) {
       return res.status(400).json({
         error: 'Invalid endDate',
-        message: 'endDate cannot be in the future',
-        received: endDate
+        message: 'endDate cannot be in the future'
       });
     }
   }
@@ -82,8 +78,7 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
     if (parsedStart > parsedEnd) {
       return res.status(400).json({
         error: 'Invalid date range',
-        message: 'startDate must be before or equal to endDate',
-        received: { startDate, endDate }
+        message: 'startDate must be before or equal to endDate'
       });
     }
   }
