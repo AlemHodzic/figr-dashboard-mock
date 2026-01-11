@@ -6,7 +6,9 @@ import type {
   ShopperMetrics, 
   PerformanceMetrics, 
   Recommendation,
-  DateRange 
+  DateRange,
+  DropoffFunnel,
+  ComparisonMetrics
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -51,4 +53,10 @@ export const api = {
   
   getRecommendations: (dateRange?: DateRange) => 
     fetchApi<Recommendation[]>('/api/recommendations', dateRange),
+
+  getDropoffFunnel: (dateRange?: DateRange) => 
+    fetchApi<DropoffFunnel[]>('/api/metrics/funnel', dateRange),
+
+  getComparison: (dateRange?: DateRange) => 
+    fetchApi<ComparisonMetrics>('/api/comparison', dateRange),
 };

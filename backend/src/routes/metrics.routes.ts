@@ -9,5 +9,6 @@ router.get('/tryons', metricsController.getTryonMetrics);
 router.get('/products', metricsController.getProductMetrics);
 router.get('/shoppers', metricsController.getShopperMetrics);
 router.get('/performance', metricsController.getPerformanceMetrics);
+router.get('/funnel', metricsController.getDropoffFunnel);
 
 export default router;

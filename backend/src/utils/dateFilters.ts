@@ -53,3 +53,40 @@ export function getDateRange(days: number): { startDate: string; endDate: string
     endDate: endDate.toISOString().split('T')[0]
   };
 }
+
+/**
+ * Calculate the previous period date range for comparison.
+ * If current period is 7 days, previous period is the 7 days before that.
+ */
+export function getPreviousPeriodRange(dateRange: DateRange): DateRange {
+  if (!dateRange.startDate || !dateRange.endDate) {
+    // If no date range specified, use "all time" - compare first half vs second half
+    return {};
+  }
+
+  const startDate = new Date(dateRange.startDate);
+  const endDate = new Date(dateRange.endDate);
+  const periodLength = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  const previousEndDate = new Date(startDate);
+  previousEndDate.setDate(previousEndDate.getDate() - 1);
+  
+  const previousStartDate = new Date(previousEndDate);
+  previousStartDate.setDate(previousStartDate.getDate() - periodLength);
+  
+  return {
+    startDate: previousStartDate.toISOString().split('T')[0],
+    endDate: previousEndDate.toISOString().split('T')[0]
+  };
+}
+
+/**
+ * Calculate percentage change between two values.
+ * Returns rounded percentage (e.g., 12 for 12% increase, -5 for 5% decrease)
+ */
+export function calculateTrend(current: number, previous: number): number {
+  if (previous === 0) {
+    return current > 0 ? 100 : 0;
+  }
+  return Math.round(((current - previous) / previous) * 100);
+}

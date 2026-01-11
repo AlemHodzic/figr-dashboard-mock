@@ -1,5 +1,5 @@
 import { DateRange, SummaryMetrics, AvatarMetrics, TryonMetrics, ProductMetrics, ShopperMetrics, PerformanceMetrics, DropoffFunnel } from '../types';
-import { filterByDateRange, groupByDate } from '../utils/dateFilters';
+import { filterByDateRange, groupByDate, getPreviousPeriodRange, calculateTrend } from '../utils/dateFilters';
 
 import shoppersData from '../data/shoppers.json';
 import avatarsData from '../data/avatars.json';
@@ -39,6 +39,16 @@ export function getSummaryMetrics(dateRange: DateRange): SummaryMetrics {
     ? Math.round((new Set(filteredTryons.map(t => t.avatarId)).size / successfulAvatars.length) * 100)
     : 0;
 
+  // Calculate trends by comparing with previous period
+  const previousPeriod = getPreviousPeriodRange(dateRange);
+  const prevAvatars = filterByDateRange(avatars, previousPeriod).filter(a => a.success);
+  const prevShoppers = filterByDateRange(shoppers, previousPeriod);
+  const prevTryons = filterByDateRange(tryons, previousPeriod).filter(t => t.success);
+  const prevCompleted = prevShoppers.filter(s => s.completedOnboarding);
+  const prevCompletionRate = prevShoppers.length > 0
+    ? Math.round((prevCompleted.length / prevShoppers.length) * 100)
+    : 0;
+
   return {
     totalAvatars: successfulAvatars.length,
     totalTryons: successfulTryons.length,
@@ -50,9 +60,9 @@ export function getSummaryMetrics(dateRange: DateRange): SummaryMetrics {
       ? Math.round(((filteredTryons.length - successfulTryons.length) / filteredTryons.length) * 100)
       : 0,
     trends: {
-      avatars: 12,
-      tryons: 8,
-      completionRate: 3
+      avatars: calculateTrend(successfulAvatars.length, prevAvatars.length),
+      tryons: calculateTrend(successfulTryons.length, prevTryons.length),
+      completionRate: calculateTrend(avatarCompletionRate, prevCompletionRate)
     }
   };
 }

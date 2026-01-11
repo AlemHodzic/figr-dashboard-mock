@@ -68,3 +68,14 @@ export async function getPerformanceMetrics(req: Request, res: Response, next: N
     next(error);
   }
 }
+
+export async function getDropoffFunnel(req: Request, res: Response, next: NextFunction) {
+  try {
+    await delay();
+    const dateRange = parseDateRange(req.query as { startDate?: string; endDate?: string });
+    const data = metricsService.getDropoffFunnel(dateRange);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+}

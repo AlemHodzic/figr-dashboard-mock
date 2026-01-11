@@ -7,6 +7,7 @@ import { Header } from '../components/layout/Header';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 import { ErrorState } from '../components/dashboard/ErrorState';
+import { ChartTooltip } from '../components/charts/ChartTooltip';
 import { 
   useTryonMetrics, 
   useProductMetrics, 
@@ -17,8 +18,16 @@ import type { DateRange } from '../types';
 
 const COLORS = ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe'];
 
+// Theme-aware chart colors
+const useChartTheme = () => ({
+  grid: 'rgba(148, 163, 184, 0.2)',
+  axisLine: 'rgba(148, 163, 184, 0.3)',
+  tick: { fontSize: 12 },
+});
+
 export function Analytics() {
   const [dateRange, setDateRange] = useState<DateRange>({});
+  const chartTheme = useChartTheme();
   
   const { data: tryons, isLoading: tryonsLoading, error: tryonsError, refetch } = useTryonMetrics(dateRange);
   const { data: products, isLoading: productsLoading } = useProductMetrics(dateRange);
@@ -60,16 +69,23 @@ export function Analytics() {
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={tryons?.timeline || []}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
                   <XAxis 
                     dataKey="date" 
-                    tick={{ fontSize: 12 }}
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
                     tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   />
-                  <YAxis tick={{ fontSize: 12 }} />
+                  <YAxis 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
                   <Tooltip 
-                    labelFormatter={(value) => new Date(value).toLocaleDateString()}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                    content={<ChartTooltip 
+                      labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                    />}
                   />
                   <Line 
                     type="monotone" 
@@ -77,6 +93,7 @@ export function Analytics() {
                     stroke="#8b5cf6" 
                     strokeWidth={2}
                     dot={{ fill: '#8b5cf6', strokeWidth: 0 }}
+                    name="Try-ons"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -109,14 +126,11 @@ export function Analytics() {
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    formatter={(value, name) => [value, name]}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                  />
+                  <Tooltip content={<ChartTooltip />} />
                   <Legend 
                     verticalAlign="bottom" 
                     height={36}
-                    formatter={(value) => <span className="text-sm">{value}</span>}
+                    formatter={(value) => <span className="text-sm text-foreground">{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -141,16 +155,23 @@ export function Analytics() {
                   layout="vertical"
                   margin={{ left: 20 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 12 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} horizontal={false} />
+                  <XAxis 
+                    type="number" 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
                   <YAxis 
                     dataKey="name" 
                     type="category" 
                     tick={{ fontSize: 11 }} 
                     width={120}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
                   />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }} />
-                  <Bar dataKey="tryons" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Bar dataKey="tryons" fill="#8b5cf6" radius={[0, 4, 4, 0]} name="Try-ons" />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -168,11 +189,20 @@ export function Analytics() {
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={shoppers?.heightDistribution || []}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="range" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }} />
-                  <Bar dataKey="count" fill="#a78bfa" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                  <XAxis 
+                    dataKey="range" 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
+                  <YAxis 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Bar dataKey="count" fill="#a78bfa" radius={[4, 4, 0, 0]} name="Shoppers" />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -192,11 +222,20 @@ export function Analytics() {
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={shoppers?.sizeRecommendations || []}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="size" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }} />
-                  <Bar dataKey="count" fill="#c4b5fd" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                  <XAxis 
+                    dataKey="size" 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
+                  <YAxis 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                  />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Bar dataKey="count" fill="#c4b5fd" radius={[4, 4, 0, 0]} name="Recommendations" />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -214,19 +253,31 @@ export function Analytics() {
             ) : (
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={performance?.latencyTimeline || []}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
                   <XAxis 
                     dataKey="date" 
-                    tick={{ fontSize: 12 }}
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
                     tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   />
-                  <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${(v/1000).toFixed(1)}s`} />
-                  <Tooltip 
-                    labelFormatter={(value) => new Date(value).toLocaleDateString()}
-                    formatter={(value) => [`${(Number(value)/1000).toFixed(2)}s`]}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                  <YAxis 
+                    tick={chartTheme.tick}
+                    tickLine={{ stroke: chartTheme.axisLine }}
+                    axisLine={{ stroke: chartTheme.axisLine }}
+                    tickFormatter={(v) => `${(v/1000).toFixed(1)}s`}
                   />
-                  <Legend verticalAlign="top" height={36} />
+                  <Tooltip 
+                    content={<ChartTooltip 
+                      labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                      valueFormatter={(value) => `${(value/1000).toFixed(2)}s`}
+                    />}
+                  />
+                  <Legend 
+                    verticalAlign="top" 
+                    height={36}
+                    formatter={(value) => <span className="text-sm text-foreground">{value}</span>}
+                  />
                   <Line type="monotone" dataKey="avatar" stroke="#8b5cf6" strokeWidth={2} name="Avatar" dot={false} />
                   <Line type="monotone" dataKey="tryon" stroke="#a78bfa" strokeWidth={2} name="Try-on" dot={false} />
                 </LineChart>

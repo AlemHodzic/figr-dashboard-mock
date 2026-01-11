@@ -56,9 +56,10 @@ The app runs at `http://localhost:5173`
 
 **1. Overview**
 - KPI cards showing: Total Avatars, Try-ons, Completion Rate, Conversion Rate, SKU Coverage, Latency
-- Trend indicators comparing to previous period
+- **Real trend indicators** - Dynamically calculated by comparing current vs previous period
 - Color-coded status (green/yellow/red) for quick health assessment
-- Conversion funnel visualization with drop-off indicators
+- **Full conversion funnel** (5 stages: Onboarding → Photo → Avatar → Try-on → Purchase)
+- **Period Comparison Mode** - Toggle to see side-by-side metrics vs previous period
 - Helpful tooltips explaining each metric
 
 **2. Analytics**
@@ -82,6 +83,7 @@ The app runs at `http://localhost:5173`
 ### Features
 
 - **Date range filtering** - Presets (7d, 14d, 30d, All) + custom date picker
+- **📊 Period Comparison** - Compare current period vs previous period side-by-side
 - **CSV Export** - Download metrics report with one click
 - **Dark/Light mode** - Theme toggle in sidebar
 - **Mobile responsive** - Collapsible sidebar, adapted layouts
@@ -89,6 +91,19 @@ The app runs at `http://localhost:5173`
 - **Error handling** - Error states with retry buttons
 - **Empty states** - Friendly messaging when no data
 - **Metric tooltips** - Hover to understand what each KPI means
+
+### Testing
+
+The backend includes comprehensive unit tests covering:
+- Date filtering and period calculations
+- All metrics service functions
+- Recommendations engine logic
+
+```bash
+cd backend
+npm test           # Run all tests
+npm test:coverage  # Run with coverage report
+```
 
 ---
 
@@ -139,11 +154,11 @@ Instead of just showing data, the dashboard generates actionable insights:
 
 1. **Real database** - PostgreSQL with Prisma ORM for proper data persistence
 2. **Authentication** - Brand-specific dashboards with login
-3. **Comparison mode** - Compare two time periods side by side
-4. **Alerts/notifications** - Email when metrics cross thresholds
-5. **More visualizations** - Heatmaps, cohort analysis, retention curves
-6. **PDF Export** - Formatted reports for stakeholders
-7. **Tests** - Unit tests for services, E2E tests for critical flows
+3. **Alerts/notifications** - Email when metrics cross thresholds
+4. **More visualizations** - Heatmaps, cohort analysis, retention curves
+5. **PDF Export** - Formatted reports for stakeholders
+6. **E2E tests** - Playwright tests for critical user flows
+7. **Anomaly detection** - Auto-highlight unusual metric changes
 
 ---
 
@@ -165,13 +180,15 @@ Instead of just showing data, the dashboard generates actionable insights:
 ```
 ├── backend/
 │   ├── src/
+│   │   ├── __tests__/      # Unit tests (Jest)
 │   │   ├── controllers/    # Request handlers
 │   │   ├── services/       # Business logic
 │   │   ├── routes/         # API endpoints
 │   │   ├── data/           # Mock JSON data
 │   │   ├── middleware/     # Error handling
 │   │   ├── types/          # TypeScript types
-│   │   └── utils/          # Helpers (delay, date filters)
+│   │   └── utils/          # Helpers (delay, date filters, trends)
+│   ├── jest.config.js      # Test configuration
 │   └── package.json
 │
 ├── frontend/
@@ -198,12 +215,14 @@ Instead of just showing data, the dashboard generates actionable insights:
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /api/metrics/summary` | Top-level KPIs |
+| `GET /api/metrics/summary` | Top-level KPIs with real trend calculations |
 | `GET /api/metrics/avatars` | Avatar creation stats |
 | `GET /api/metrics/tryons` | Try-on metrics by category |
 | `GET /api/metrics/products` | Product performance |
 | `GET /api/metrics/shoppers` | Demographics, distributions |
 | `GET /api/metrics/performance` | Latency, error rates |
+| `GET /api/metrics/funnel` | Full 5-stage conversion funnel |
+| `GET /api/comparison` | Side-by-side period comparison |
 | `GET /api/recommendations` | Actionable insights |
 
 All endpoints support `?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` query params.

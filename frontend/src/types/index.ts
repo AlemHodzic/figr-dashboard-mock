@@ -80,3 +80,32 @@ export interface DateRange {
   startDate?: string;
   endDate?: string;
 }
+
+export interface ComparisonMetrics {
+  current: {
+    period: string;
+    avatars: number;
+    tryons: number;
+    completionRate: number;
+    conversionRate: number;
+    avgLatencyMs: number;
+    errorRate: number;
+  };
+  previous: {
+    period: string;
+    avatars: number;
+    tryons: number;
+    completionRate: number;
+    conversionRate: number;
+    avgLatencyMs: number;
+    errorRate: number;
+  };
+  changes: {
+    avatars: number;
+    tryons: number;
+    completionRate: number;
+    conversionRate: number;
+    avgLatencyMs: number;
+    errorRate: number;
+  };
+}

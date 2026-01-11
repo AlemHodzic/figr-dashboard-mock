@@ -1,27 +1,25 @@
 import { useState } from 'react';
-import { Users, Shirt, CheckCircle, Zap, Package, Activity } from 'lucide-react';
+import { Users, Shirt, CheckCircle, Zap, Package, Activity, GitCompare } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { KpiCard } from '../components/dashboard/KpiCard';
 import { ErrorState } from '../components/dashboard/ErrorState';
 import { FunnelChart } from '../components/charts/FunnelChart';
-import { useSummary, useShopperMetrics, useTryonMetrics, useProductMetrics } from '../hooks/useMetrics';
+import { ComparisonView } from '../components/dashboard/ComparisonView';
+import { useSummary, useShopperMetrics, useTryonMetrics, useProductMetrics, useDropoffFunnel, useComparison } from '../hooks/useMetrics';
 import { formatPercent, formatLatency } from '../lib/utils';
 import { exportMetricsReport } from '../lib/export';
 import type { DateRange } from '../types';
 
 export function Overview() {
   const [dateRange, setDateRange] = useState<DateRange>({});
+  const [showComparison, setShowComparison] = useState(false);
   
   const { data: summary, isLoading: summaryLoading, error: summaryError, refetch: refetchSummary } = useSummary(dateRange);
   const { data: shoppers, isLoading: shoppersLoading } = useShopperMetrics(dateRange);
   const { data: tryons } = useTryonMetrics(dateRange);
   const { data: products } = useProductMetrics(dateRange);
-
-  const funnel = [
-    { stage: 'Started Onboarding', count: shoppers?.total || 0, percentage: 100 },
-    { stage: 'Avatar Created', count: summary?.totalAvatars || 0, percentage: summary?.avatarCompletionRate || 0 },
-    { stage: 'Try-on Completed', count: summary?.totalTryons || 0, percentage: summary?.tryonConversionRate || 0 },
-  ];
+  const { data: funnel, isLoading: funnelLoading } = useDropoffFunnel(dateRange);
+  const { data: comparison, isLoading: comparisonLoading } = useComparison(dateRange);
 
   const handleExport = () => {
     if (!summary) return;
@@ -58,6 +56,28 @@ export function Overview() {
         onDateRangeChange={setDateRange}
         onExport={handleExport}
       />
+
+      {/* Comparison Mode Toggle */}
+      <div className="mb-6">
+        <button
+          onClick={() => setShowComparison(!showComparison)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            showComparison 
+              ? 'bg-violet-600 text-white shadow-md' 
+              : 'bg-muted text-muted-foreground hover:bg-muted/80'
+          }`}
+        >
+          <GitCompare className="h-4 w-4" />
+          {showComparison ? 'Hide Comparison' : 'Compare Periods'}
+        </button>
+      </div>
+
+      {/* Comparison View */}
+      {showComparison && (
+        <div className="mb-6">
+          <ComparisonView data={comparison} loading={comparisonLoading} dateRange={dateRange} />
+        </div>
+      )}
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
         <KpiCard
@@ -138,7 +158,7 @@ export function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-        <FunnelChart data={funnel} loading={summaryLoading || shoppersLoading} />
+        <FunnelChart data={funnel || []} loading={funnelLoading} />
         
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-foreground">Quick Stats</h3>

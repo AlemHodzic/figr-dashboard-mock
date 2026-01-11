@@ -50,3 +50,17 @@ export function useRecommendations(dateRange?: DateRange) {
     queryFn: () => api.getRecommendations(dateRange),
   });
 }
+
+export function useDropoffFunnel(dateRange?: DateRange) {
+  return useQuery({
+    queryKey: ['funnel', dateRange],
+    queryFn: () => api.getDropoffFunnel(dateRange),
+  });
+}
+
+export function useComparison(dateRange?: DateRange) {
+  return useQuery({
+    queryKey: ['comparison', dateRange],
+    queryFn: () => api.getComparison(dateRange),
+  });
+}
