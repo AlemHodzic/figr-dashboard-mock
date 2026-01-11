@@ -2,6 +2,7 @@
 
 A brand analytics dashboard that transforms shopper interaction data into actionable insights for fashion brands.
 
+Deployed site preview: https://figr-dashboard-mock.vercel.app/
 
 ## Quick Start
 
